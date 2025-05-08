@@ -3,7 +3,7 @@ description: Crear un nuevo issue para el trabajo práctico vinculado a un miles
 assignees: [temPLAY333]
 labels: [enhancement]
 type: "Feature"
-projects: "TP-4"
+projects: [TP-4]
 body:
   - type: markdown
     attributes:
@@ -31,6 +31,18 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: dificultad
+    attributes:
+      label: Dificultad
+      description: Seleccioná la dificultad del issue
+      options:
+        - Baja
+        - Media
+        - Alta
+    validations:
+      required: true
+
   - type: checkboxes
     id: checklist
     attributes:
@@ -41,5 +53,3 @@ body:
         - label: Se probó la funcionalidad en `Main` o test correspondiente
         - label: Se creó una rama específica para este issue
         - label: Se abrió un Pull Request que menciona este Issue
-    validations:
-      required: true
