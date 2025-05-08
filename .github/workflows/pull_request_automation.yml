@@ -1,0 +1,36 @@
+name: Automate Pull Request Management
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  automate-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Assign default assignee
+      uses: actions-ecosystem/action-assign@v1
+      with:
+        assignees: temPLAY333
+
+    - name: Add default labels
+      uses: actions-ecosystem/action-add-labels@v1
+      with:
+        labels: enhancement
+
+    - name: Link to project
+      uses: actions-ecosystem/action-add-project@v1
+      with:
+        project_name: TP-4
+
+    - name: Add default comment
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.payload.pull_request.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `⚠️ **Completa los siguientes campos para registrar este Pull Request correctamente.**\n\n- **Objetivo:** Describe el objetivo del Pull Request.\n- **Detalles:** Explica brevemente los pasos o componentes involucrados.\n- **Checklist:**\n  - [ ] La funcionalidad está implementada correctamente\n  - [ ] Se probó la funcionalidad en \\`Main\\` o test correspondiente\n  - [ ] Se creó una rama específica para este Pull Request\n  - [ ] Este Pull Request menciona el Issue relacionado.`
+          });
