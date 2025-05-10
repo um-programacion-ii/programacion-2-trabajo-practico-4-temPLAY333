@@ -40,8 +40,8 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const extractIssue = JSON.parse(steps.extract-issue.outputs.result);
-          const issueNumber = extractIssue.issueNumber;
+          const extractIssueResult = ${{ toJSON(steps.extract-issue.outputs.result) }};
+          const issueNumber = JSON.parse(extractIssueResult).issueNumber;
     
           let updatedBody = context.payload.pull_request.body || '';
           if (!updatedBody.includes(`#${issueNumber}`)) {
@@ -116,8 +116,8 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           try {
-            const extractIssue = ${{ steps.extract-issue.outputs.result }};
-            const issueNumber = JSON.parse(extractIssue).issueNumber;
+            const extractIssueResult = ${{ toJSON(steps.extract-issue.outputs.result) }};
+            const issueNumber = JSON.parse(extractIssueResult).issueNumber;
             
             // El resto del código para añadir al proyecto sigue igual
             const addToProjectMutation = `
@@ -132,7 +132,7 @@ jobs:
                 }
               }
             `;
-
+    
             const result = await github.graphql(addToProjectMutation);
             console.log('PR añadido al proyecto con éxito: ' + JSON.stringify(result));
           } catch (error) {
