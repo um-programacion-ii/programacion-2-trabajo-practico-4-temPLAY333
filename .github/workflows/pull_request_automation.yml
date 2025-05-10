@@ -2,97 +2,147 @@ name: Automate Pull Request Management
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened, reopened, synchronize]
 
 jobs:
   automate-pr:
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       issues: write
       pull-requests: write
+      repository-projects: write
 
     steps:
-    - name: Assign default assignee, add labels and add to project
+    - name: Extract issue number from branch name
+      id: extract-issue
       uses: actions/github-script@v6
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          // Asignar PR
-          await github.rest.issues.addAssignees({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            assignees: ['temPLAY333']
-          });
-          
-          // Añadir etiqueta
-          await github.rest.issues.addLabels({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            labels: ['enhancement']
-          });
-          
-          try {
-            const milestones = await github.rest.issues.listMilestones({
+          const branchName = context.payload.pull_request.head.ref;
+          const branchPattern = /issue-(\d+)/;
+          const branchMatch = branchName.match(branchPattern);
+
+          let issueNumber = null;
+          if (branchMatch) {
+            issueNumber = parseInt(branchMatch[1]);
+            console.log(`Número de issue extraído de la rama: #${issueNumber}`);
+            return { issueNumber };
+          } else {
+            console.log("No se encontró número de issue en el nombre de la rama");
+            return { issueNumber: null };
+          }
+
+    - name: Link issue in PR body
+      if: ${{ fromJSON(steps.extract-issue.outputs.result).issueNumber != null }}
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const extractIssueResult = ${{ toJSON(steps.extract-issue.outputs.result) }};
+          const issueNumber = JSON.parse(extractIssueResult).issueNumber;
+    
+          let updatedBody = context.payload.pull_request.body || '';
+          if (!updatedBody.includes(`#${issueNumber}`)) {
+            updatedBody += `\n\nCloses #${issueNumber}`;
+            await github.rest.pulls.update({
+              pull_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              state: 'open'
+              body: updatedBody
             });
-          
-            const milestone = milestones.data.find(m => m.title === 'Etapa 1: Configuración y Modelos');
-          
-            if (milestone) {
+            console.log(`PR body actualizado con referencia a issue #${issueNumber}`);
+          }
+
+    - name: Copy properties from issue
+      if: ${{ fromJSON(steps.extract-issue.outputs.result).issueNumber != null }}
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const extractIssueResult = ${{ toJSON(steps.extract-issue.outputs.result) }};
+          const issueNumber = JSON.parse(extractIssueResult).issueNumber;
+
+          try {
+            const linkedIssue = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber
+            });
+
+            // 1. Copiar milestone
+            if (linkedIssue.data.milestone) {
               await github.rest.issues.update({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                milestone: milestone.number
+                milestone: linkedIssue.data.milestone.number
               });
+              console.log(`Milestone asignado desde issue #${issueNumber}: ${linkedIssue.data.milestone.title}`);
             }
-          } catch (error) {
-            console.log('Error al añadir milestone: ' + error);
-          }
-          
-          try {
-            // Intentar obtener proyectos
-            const { data: projects } = await github.rest.projects.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            });
-          
-            console.log('Proyectos encontrados: ' + projects.length);
-          
-            // Intentar encontrar el proyecto TP-4
-            const project = projects.find(p => p.name.includes('TP-4'));
 
-            if (project) {
-              // Obtener columnas del proyecto
-              const { data: columns } = await github.rest.projects.listColumns({
-                project_id: project.id
+            // 2. Copiar etiquetas
+            if (linkedIssue.data.labels && linkedIssue.data.labels.length > 0) {
+              const labels = linkedIssue.data.labels.map(label => label.name);
+              await github.rest.issues.addLabels({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: labels
               });
-          
-              if (columns.length > 0) {
-                // Usar la primera columna para crear la tarjeta
-                await github.rest.projects.createCard({
-                  column_id: columns[0].id,
-                  content_id: context.payload.pull_request.id,
-                  content_type: 'PullRequest'
-                });
-                console.log('Project card created successfully');
-              } else {
-                console.log('No se encontraron columnas en el proyecto');
-              }
-            } else {
-              console.log('No se encontró el proyecto TP-4');
+              console.log(`Etiquetas asignadas desde issue #${issueNumber}: ${labels.join(', ')}`);
+            }
+
+            // 3. Copiar asignados
+            if (linkedIssue.data.assignees && linkedIssue.data.assignees.length > 0) {
+              const assignees = linkedIssue.data.assignees.map(user => user.login);
+              await github.rest.issues.addAssignees({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                assignees: assignees
+              });
+              console.log(`Asignados copiados desde issue #${issueNumber}: ${assignees.join(', ')}`);
             }
           } catch (error) {
-            console.log('Error al añadir al proyecto: ' + error.message);
+            console.log(`Error al procesar el issue #${issueNumber}: ${error.message}`);
+          }
+
+    - name: Add to project
+      if: ${{ fromJSON(steps.extract-issue.outputs.result).issueNumber != null }}
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          try {
+            const extractIssueResult = ${{ toJSON(steps.extract-issue.outputs.result) }};
+            const issueNumber = JSON.parse(extractIssueResult).issueNumber;
+            
+            // El resto del código para añadir al proyecto sigue igual
+            const addToProjectMutation = `
+              mutation {
+                addProjectV2ItemById(input: {
+                  projectId: "PVT_kwDOCxUR4M4AiQk",
+                  contentId: "${context.payload.pull_request.node_id}"
+                }) {
+                  item {
+                    id
+                  }
+                }
+              }
+            `;
+    
+            const result = await github.graphql(addToProjectMutation);
+            console.log('PR añadido al proyecto con éxito: ' + JSON.stringify(result));
+          } catch (error) {
+            console.log('Error al añadir al proyecto V2: ' + error.message);
           }
 
     - name: Add default comment
       uses: actions/github-script@v6
       with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           try {
             await github.rest.issues.createComment({

@@ -7,7 +7,6 @@ import um.programacion2.exception.IllegalArgumentsPrestamo;
 
 
 public class PrestamoFactory {
-    private static Long idCounter = 0L;
 
     public static Prestamo createPrestamo(Libro libro, Usuario usuario) {
         verifyLibro(libro);
@@ -17,11 +16,7 @@ public class PrestamoFactory {
         String fechaPrestamo = java.time.LocalDate.now().toString();
         String fechaDevolucion = java.time.LocalDate.now().plusDays(7).toString();
 
-        return new Prestamo(idCounter++, libro, usuario, fechaPrestamo, fechaDevolucion);
-    }
-
-    public static void resetIdCounter() {
-        idCounter = 0L;
+        return new Prestamo(null, libro, usuario, fechaPrestamo, fechaDevolucion);
     }
 
     private static void verifyLibro(Libro libro) {

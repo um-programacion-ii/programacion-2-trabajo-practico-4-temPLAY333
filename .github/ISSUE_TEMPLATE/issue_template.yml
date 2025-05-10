@@ -3,7 +3,8 @@ description: Crear un nuevo issue para el trabajo práctico vinculado a un miles
 assignees: [temPLAY333]
 labels: [enhancement]
 type: "Feature"
-projects: [TP-4]
+milestone: 3
+
 body:
   - type: markdown
     attributes:
@@ -15,7 +16,7 @@ body:
     attributes:
       label: Objetivo
       description: ¿Qué se busca lograr con este issue?
-      value: Crear la clase [] siguiendo los principios []
+      value: Crear lad clases [] siguiendo el principio []
     validations:
       required: true
 
@@ -42,14 +43,3 @@ body:
         - Alta
     validations:
       required: true
-
-  - type: checkboxes
-    id: checklist
-    attributes:
-      label: Checklist de finalización
-      description: Marcá los puntos que se deben cumplir para dar el issue como terminado
-      options:
-        - label: La funcionalidad está implementada correctamente
-        - label: Se probó la funcionalidad en `Main` o test correspondiente
-        - label: Se creó una rama específica para este issue
-        - label: Se abrió un Pull Request que menciona este Issue
