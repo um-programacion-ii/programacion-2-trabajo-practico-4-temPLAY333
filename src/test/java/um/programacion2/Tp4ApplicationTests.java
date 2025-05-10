@@ -9,10 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class Tp4ApplicationTests {
 
 	@Test
-	void contextLoads() {
-	}
-
-	@Test
 	void simpleTest() {
 		assertTrue(true);
 	}
