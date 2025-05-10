@@ -1,39 +1,46 @@
 package um.programacion2.prestamo;
 
-import java.util.List;
-import java.util.Optional;
+import um.programacion2.libro.Libro;
 
-public class PrestamoRepositoryImpl implements PrestamoRepository{
+import java.util.*;
+
+
+public class PrestamoRepositoryImpl implements PrestamoRepository {
+    private final Map<Long, Prestamo> prestamos = new HashMap<>();
+    private Long nextId = 1L;
+
     @Override
-    public void guardarPrestamo(Prestamo prestamo) {
-        // Implementación para guardar un préstamo
+    public void save(Prestamo prestamo) {
+        if (prestamo.getId() == null) {
+            prestamo.setId(nextId++);
+        }
+        prestamos.put(prestamo.getId(), prestamo);
     }
 
     @Override
-    public Optional<Prestamo> buscarPrestamoPorId(int id) {
-        // Implementación para buscar un préstamo por ID
-        return Optional.empty();
+    public void deleteById(Long id) {
+        prestamos.remove(id);
     }
 
     @Override
-    public Optional<Prestamo> buscarPrestamoPorLibroId(int libroId) {
-        // Implementación para buscar un préstamo por ID de libro
-        return Optional.empty();
+    public boolean existsById(Long id) {
+        return prestamos.containsKey(id);
     }
 
     @Override
-    public void eliminarPrestamo(int id) {
-        // Implementación para eliminar un préstamo
+    public Optional<Prestamo> findById(Long id) {
+        return Optional.ofNullable(prestamos.get(id));
     }
 
     @Override
-    public void actualizarPrestamo(Prestamo prestamo) {
-        // Implementación para actualizar un préstamo
+    public Optional<Prestamo> findByLibroId(Long id) {
+        return prestamos.values().stream()
+                .filter(prestamo -> prestamo.getLibro().getId().equals(id))
+                .findFirst();
     }
 
     @Override
-    public List<Prestamo> listarPrestamos() {
-        // Implementación para listar todos los préstamos
-        return List.of();
+    public List<Prestamo> findAll() {
+        return new ArrayList<>(prestamos.values());
     }
 }

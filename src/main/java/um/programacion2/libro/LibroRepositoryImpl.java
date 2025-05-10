@@ -10,12 +10,11 @@ public class LibroRepositoryImpl implements LibroRepository {
     private Long nextId = 1L;
 
     @Override
-    public Libro save(Libro libro) {
+    public void save(Libro libro) {
         if (libro.getId() == null) {
             libro.setId(nextId++);
         }
         libros.put(libro.getId(), libro);
-        return libro;
     }
 
     @Override

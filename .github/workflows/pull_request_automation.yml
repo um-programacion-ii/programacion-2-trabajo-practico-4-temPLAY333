@@ -119,11 +119,31 @@ jobs:
             const extractIssueResult = ${{ toJSON(steps.extract-issue.outputs.result) }};
             const issueNumber = JSON.parse(extractIssueResult).issueNumber;
             
-            // El resto del código para añadir al proyecto sigue igual
+            // Obtener el ID interno del proyecto a partir del número
+            const organizationName = context.repo.owner;
+            const projectNumber = 137;
+            
+            // Primero consultar el ID del proyecto usando el número
+            const findProjectQuery = `
+              query {
+                organization(login: "${organizationName}") {
+                  projectV2(number: ${projectNumber}) {
+                    id
+                  }
+                }
+              }
+            `;
+            
+            const projectResult = await github.graphql(findProjectQuery);
+            const projectId = projectResult.organization.projectV2.id;
+            
+            console.log(`ID del proyecto obtenido: ${projectId}`);
+            
+            // Añadir el PR al proyecto usando el ID obtenido
             const addToProjectMutation = `
               mutation {
                 addProjectV2ItemById(input: {
-                  projectId: "PVT_kwDOCxUR4M4AiQk",
+                  projectId: "${projectId}",
                   contentId: "${context.payload.pull_request.node_id}"
                 }) {
                   item {
