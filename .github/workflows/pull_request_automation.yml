@@ -61,8 +61,8 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const extractIssue = ${{ steps.extract-issue.outputs.result }};
-          const issueNumber = JSON.parse(extractIssue).issueNumber;
+          const extractIssueResult = ${{ toJSON(steps.extract-issue.outputs.result) }};
+          const issueNumber = JSON.parse(extractIssueResult).issueNumber;
 
           try {
             const linkedIssue = await github.rest.issues.get({
