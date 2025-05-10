@@ -40,7 +40,7 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const extractIssue = fromJSON(steps.extract-issue.outputs.result);
+          const extractIssue = JSON.parse(steps.extract-issue.outputs.result);
           const issueNumber = extractIssue.issueNumber;
     
           let updatedBody = context.payload.pull_request.body || '';
