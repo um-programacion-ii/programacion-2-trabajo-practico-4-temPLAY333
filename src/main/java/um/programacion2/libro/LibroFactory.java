@@ -3,14 +3,13 @@ package um.programacion2.libro;
 import um.programacion2.exception.IllegalArgumentsLibro;
 
 public class LibroFactory {
-    private static Long idCounter = 0L;
 
     public static Libro createLibro(String isbn, String titulo, String autor) {
         verifyIsbn(isbn);
         verifyTitulo(titulo);
         verifyAutor(autor);
         EstadoLibro estado = EstadoLibro.DISPONIBLE;
-        return new Libro(++idCounter, isbn, titulo, autor, estado);
+        return new Libro(null, isbn, titulo, autor, estado);
     }
 
     public static void verifyIsbn(String ISBN) throws IllegalArgumentsLibro {

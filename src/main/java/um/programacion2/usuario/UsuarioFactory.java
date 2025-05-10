@@ -2,13 +2,14 @@ package um.programacion2.usuario;
 
 import um.programacion2.exception.IllegalArgumentsUsuario;
 
+import java.util.ArrayList;
+
 public class UsuarioFactory {
-    private static Long idCounter = 0L;
 
     public static Usuario createUsuario(String nombre, String email) {
         verificarNombre(nombre);
         verificarEmail(email);
-        return new Usuario(++idCounter, nombre, email, true);
+        return new Usuario(null, nombre, email, true, new ArrayList<>());
     }
 
     public static void verificarNombre(String nombre) {
