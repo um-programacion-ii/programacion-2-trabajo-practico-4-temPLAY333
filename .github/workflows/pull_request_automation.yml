@@ -7,11 +7,15 @@ on:
 jobs:
   automate-pr:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
 
     steps:
     - name: Assign default assignee, add labels and add to project
       uses: actions/github-script@v6
       with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           // Asignar PR
           await github.rest.issues.addAssignees({
@@ -30,32 +34,74 @@ jobs:
           });
           
           try {
-            // Intentar añadir al proyecto (esto depende de la API de proyectos)
-            const projects = await github.rest.projects.listForRepo({
+            const milestones = await github.rest.issues.listMilestones({
               owner: context.repo.owner,
-              repo: context.repo.repo
+              repo: context.repo.repo,
+              state: 'open'
             });
-            
-            const project = projects.data.find(p => p.name === 'TP-4');
-            
-            if (project) {
-              await github.rest.projects.createCard({
-                project_id: project.id,
-                content_id: context.payload.pull_request.id,
-                content_type: 'PullRequest'
+          
+            const milestone = milestones.data.find(m => m.title === 'Etapa 1: Configuración y Modelos');
+          
+            if (milestone) {
+              await github.rest.issues.update({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                milestone: milestone.number
               });
             }
           } catch (error) {
-            console.log('Error al añadir al proyecto: ' + error);
+            console.log('Error al añadir milestone: ' + error);
+          }
+          
+          try {
+            // Intentar obtener proyectos
+            const { data: projects } = await github.rest.projects.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+          
+            console.log('Proyectos encontrados: ' + projects.length);
+          
+            // Intentar encontrar el proyecto TP-4
+            const project = projects.find(p => p.name.includes('TP-4'));
+
+            if (project) {
+              // Obtener columnas del proyecto
+              const { data: columns } = await github.rest.projects.listColumns({
+                project_id: project.id
+              });
+          
+              if (columns.length > 0) {
+                // Usar la primera columna para crear la tarjeta
+                await github.rest.projects.createCard({
+                  column_id: columns[0].id,
+                  content_id: context.payload.pull_request.id,
+                  content_type: 'PullRequest'
+                });
+                console.log('Project card created successfully');
+              } else {
+                console.log('No se encontraron columnas en el proyecto');
+              }
+            } else {
+              console.log('No se encontró el proyecto TP-4');
+            }
+          } catch (error) {
+            console.log('Error al añadir al proyecto: ' + error.message);
           }
 
     - name: Add default comment
       uses: actions/github-script@v6
       with:
         script: |
-          github.rest.issues.createComment({
-            issue_number: context.payload.pull_request.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: `⚠️ **Completa los siguientes campos para registrar este Pull Request correctamente.**\n\n- **Objetivo:** Describe el objetivo del Pull Request.\n- **Detalles:** Explica brevemente los pasos o componentes involucrados.\n- **Checklist:**\n  - [ ] La funcionalidad está implementada correctamente\n  - [ ] Se probó la funcionalidad en \`Main\` o test correspondiente\n  - [ ] Se creó una rama específica para este Pull Request\n  - [ ] Este Pull Request menciona el Issue relacionado.`
-          });
+          try {
+            await github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `**Checklist:**\n  - [ ] La funcionalidad está implementada correctamente\n  - [ ] Se probó la funcionalidad en \`Main\` o test correspondiente\n  - [ ] Se creó una rama específica para este Pull Request\n  - [ ] Este Pull Request menciona el Issue relacionado.`
+            });
+            console.log('Comment added successfully');
+          } catch (error) {
+            console.log('Error al añadir comentario: ' + error.message);
+          }
