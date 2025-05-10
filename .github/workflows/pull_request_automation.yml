@@ -40,9 +40,9 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const extractIssue = ${{ steps.extract-issue.outputs.result }};
-          const issueNumber = JSON.parse(extractIssue).issueNumber;
-
+          const extractIssue = fromJSON(steps.extract-issue.outputs.result);
+          const issueNumber = extractIssue.issueNumber;
+    
           let updatedBody = context.payload.pull_request.body || '';
           if (!updatedBody.includes(`#${issueNumber}`)) {
             updatedBody += `\n\nCloses #${issueNumber}`;
