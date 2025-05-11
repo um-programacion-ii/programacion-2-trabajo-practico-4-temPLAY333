@@ -7,12 +7,11 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
     private Long nextId = 1L;
 
     @Override
-    public Usuario save(Usuario usuario) {
+    public void save(Usuario usuario) {
         if (usuario.getId() == null) {
             usuario.setId(nextId++);
         }
         usuarios.put(usuario.getId(), usuario);
-        return usuario;
     }
 
     @Override

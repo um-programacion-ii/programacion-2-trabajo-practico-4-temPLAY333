@@ -1,6 +1,6 @@
 package um.programacion2.libro;
 
-import um.programacion2.exception.IllegalArgumentsLibro;
+import um.programacion2.exception.LibroArgumentoIlegal;
 
 public class LibroFactory {
 
@@ -12,29 +12,29 @@ public class LibroFactory {
         return new Libro(null, isbn, titulo, autor, estado);
     }
 
-    public static void verifyIsbn(String ISBN) throws IllegalArgumentsLibro {
+    public static void verifyIsbn(String ISBN) throws LibroArgumentoIlegal {
         // Verificar si el ISBN es válido
         if (ISBN == null || ISBN.trim().isEmpty()) {
-            throw new IllegalArgumentsLibro("No puede ser nulo o vacío");
+            throw new LibroArgumentoIlegal("No puede ser nulo o vacío");
         }
 
         String isbnLimpio = getIsbnLimpio(ISBN);
 
         if (!validarDigitoControl(isbnLimpio)) {
-            throw new IllegalArgumentsLibro("Codigo Erroneo (no coincide con el digito de control)");
+            throw new LibroArgumentoIlegal("Codigo Erroneo (no coincide con el digito de control)");
         }
     }
 
-    public static String getIsbnLimpio(String ISBN) throws IllegalArgumentsLibro {
+    public static String getIsbnLimpio(String ISBN) throws LibroArgumentoIlegal {
         String isbnLimpio = ISBN.replaceAll("[-\\s]", "");
 
         if (isbnLimpio.length() != 10 && isbnLimpio.length() != 13) {
-            throw new IllegalArgumentsLibro("No tiene 10 ni 13 dígitos");
+            throw new LibroArgumentoIlegal("No tiene 10 ni 13 dígitos");
         }
 
         // Verificar que solo contenga dígitos (y posiblemente 'X' en la última posición para ISBN-10)
         if (!isbnLimpio.matches("[0-9]{9}[0-9X]") && !isbnLimpio.matches("[0-9]{13}")) {
-            throw new IllegalArgumentsLibro("Contiene caracteres inválidos");
+            throw new LibroArgumentoIlegal("Contiene caracteres inválidos");
         }
         return isbnLimpio;
     }
@@ -67,14 +67,14 @@ public class LibroFactory {
     public static void verifyTitulo(String titulo) {
         // Verificar si el título es válido
         if (titulo == null || titulo.trim().isEmpty()) {
-            throw new IllegalArgumentsLibro("El título no puede ser nulo o vacío");
+            throw new LibroArgumentoIlegal("El título no puede ser nulo o vacío");
         }
     }
 
     public static void verifyAutor(String autor) {
         // Verificar si el autor es válido
         if (autor == null || autor.trim().isEmpty()) {
-            throw new IllegalArgumentsLibro("El autor no puede ser nulo o vacío");
+            throw new LibroArgumentoIlegal("El autor no puede ser nulo o vacío");
         }
     }
 }

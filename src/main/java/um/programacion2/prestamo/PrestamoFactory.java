@@ -3,7 +3,7 @@ package um.programacion2.prestamo;
 import um.programacion2.libro.EstadoLibro;
 import um.programacion2.libro.Libro;
 import um.programacion2.usuario.Usuario;
-import um.programacion2.exception.IllegalArgumentsPrestamo;
+import um.programacion2.exception.PrestamoArgumentoIlegal;
 
 
 public class PrestamoFactory {
@@ -21,22 +21,22 @@ public class PrestamoFactory {
 
     private static void verifyLibro(Libro libro) {
         if (libro == null) {
-            throw new IllegalArgumentsPrestamo("El libro no puede ser nulo");
+            throw new PrestamoArgumentoIlegal("El libro no puede ser nulo");
         }
         if (libro.getEstado() != EstadoLibro.DISPONIBLE) {
-            throw new IllegalArgumentsPrestamo("El libro esta " + libro.getEstado());
+            throw new PrestamoArgumentoIlegal("El libro esta " + libro.getEstado());
         }
     }
 
     private static void verifyUsuario(Usuario usuario) {
         if (usuario == null) {
-            throw new IllegalArgumentsPrestamo("El usuario no puede ser nulo");
+            throw new PrestamoArgumentoIlegal("El usuario no puede ser nulo");
         }
         if (!usuario.getEstado()) {
-            throw new IllegalArgumentsPrestamo("El usuario no esta habilitado");
+            throw new PrestamoArgumentoIlegal("El usuario no esta habilitado");
         }
         if (usuario.getPrestamos().size() >= 3) {
-            throw new IllegalArgumentsPrestamo("El usuario ya tiene 3 prestamos");
+            throw new PrestamoArgumentoIlegal("El usuario ya tiene 3 prestamos");
         }
     }
 }
