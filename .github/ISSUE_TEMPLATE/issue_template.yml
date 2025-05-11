@@ -3,7 +3,6 @@ description: Crear un nuevo issue para el trabajo práctico vinculado a un miles
 assignees: [temPLAY333]
 labels: [enhancement]
 type: "Feature"
-milestone: 3
 
 body:
   - type: markdown
