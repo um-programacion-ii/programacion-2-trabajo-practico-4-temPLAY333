@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface LibroService {
     Libro buscarPorId(Long id);
-    List<Libro> obtenerTodos();
+    List<Libro> listarLibros();
 
     void guardar(Libro libro);
     void actualizar(Long id, Libro libro);

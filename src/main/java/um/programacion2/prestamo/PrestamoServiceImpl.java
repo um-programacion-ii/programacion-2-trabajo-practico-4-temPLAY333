@@ -12,7 +12,7 @@ public class PrestamoServiceImpl implements PrestamoService {
     }
 
     @Override
-    public Prestamo buscarPrestamoPorId(Long id) {
+    public Prestamo buscarPorId(Long id) {
         return prestamoRepository.findById(id)
                 .orElseThrow(() -> new PrestamoNoEncontrado(id));
     }
@@ -23,26 +23,25 @@ public class PrestamoServiceImpl implements PrestamoService {
     }
 
     @Override
-    public void solicitarPrestamo(Prestamo prestamo) {
+    public void guardar(Prestamo prestamo) {
         prestamoRepository.save(prestamo);
     }
 
     @Override
-    public void actualizarPrestamo(Prestamo prestamo) {
-        if (prestamoRepository.existsById(prestamo.getId())) {
+    public void actualizar(Long id, Prestamo prestamo) {
+        if (prestamoRepository.existsById(id)) {
             prestamoRepository.save(prestamo);
         } else {
-            throw new PrestamoNoEncontrado(prestamo.getId());
+            throw new PrestamoNoEncontrado(id);
         }
     }
 
     @Override
-    public void devolverPrestamo(Prestamo prestamo) {
-        Long prestamoId = prestamo.getId();
-        if (prestamoRepository.existsById(prestamoId)) {
-            prestamoRepository.deleteById(prestamoId);
+    public void eliminar(Long id) {
+        if (prestamoRepository.existsById(id)) {
+            prestamoRepository.deleteById(id);
         } else {
-            throw new PrestamoNoEncontrado(prestamoId);
+            throw new PrestamoNoEncontrado(id);
         }
     }
 }

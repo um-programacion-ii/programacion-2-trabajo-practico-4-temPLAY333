@@ -1,4 +1,4 @@
-package um.programacion2.libro;
+package um.programacion2.validacion;
 
 import org.springframework.stereotype.Service;
 import um.programacion2.exception.LibroArgumentoIlegal;

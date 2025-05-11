@@ -1,4 +1,4 @@
-package um.programacion2.libro;
+package um.programacion2.prestamo;
 
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -9,29 +9,29 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/libros")
-public class LibroController {
-    private final LibroService libroService;
+@RequestMapping("/api/prestamos")
+public class PrestamoController {
+    private final PrestamoService prestamosService;
 
-    public LibroController(LibroService libroService) {
-        this.libroService = libroService;
+    public PrestamoController(PrestamoService prestamosService) {
+        this.prestamosService = prestamosService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Libro>> obtenerTodos() {
-        List<Libro> libros = libroService.listarLibros();
+    public ResponseEntity<List<Prestamo>> obtenerTodos() {
+        List<Prestamo> libros = prestamosService.listarPrestamos();
         return ResponseEntity.ok(libros);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Libro> obtenerPorId(@PathVariable Long id) {
-        Libro libro = libroService.buscarPorId(id);
+    public ResponseEntity<Prestamo> obtenerPorId(@PathVariable Long id) {
+        Prestamo libro = prestamosService.buscarPorId(id);
         return ResponseEntity.ok(libro);
     }
 
     @PostMapping
-    public ResponseEntity<Void> crear(@Valid @RequestBody Libro libro) {
-        libroService.guardar(libro);
+    public ResponseEntity<Void> crear(@Valid @RequestBody Prestamo libro) {
+        prestamosService.guardar(libro);
 
         // Crear URI del recurso creado
         URI location = ServletUriComponentsBuilder
@@ -45,8 +45,8 @@ public class LibroController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> actualizar(@PathVariable Long id, @Valid @RequestBody Libro libro) {
-        libroService.actualizar(id, libro);
+    public ResponseEntity<Void> actualizar(@PathVariable Long id, @Valid @RequestBody Prestamo libro) {
+        prestamosService.actualizar(id, libro);
 
         // Devolver 204 No Content para indicar éxito sin contenido en respuesta
         return ResponseEntity.noContent().build();
@@ -54,7 +54,7 @@ public class LibroController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        libroService.eliminar(id);
+        prestamosService.eliminar(id);
 
         // Devolver 204 No Content
         return ResponseEntity.noContent().build();
