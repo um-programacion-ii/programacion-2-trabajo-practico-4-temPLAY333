@@ -16,4 +16,8 @@ public class Usuario {
     private String email;
     private Boolean estado;
     private ArrayList<Prestamo> prestamos;
+
+    public boolean isActivo() {
+        return estado != null && estado;
+    }
 }

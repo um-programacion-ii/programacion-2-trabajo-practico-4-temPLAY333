@@ -31,15 +31,20 @@ public class LibroServiceImpl implements LibroService {
 
     @Override
     public void eliminar(Long id) {
-        libroRepository.deleteById(id);
+        if (libroRepository.existsById(id)) {
+            libroRepository.deleteById(id);
+        } else {
+            throw new LibroNoEncontrado(id);
+        }
     }
 
     @Override
     public void actualizar(Long id, Libro libro) {
-        if (!libroRepository.existsById(id)) {
+        if (libroRepository.existsById(id)) {
+            libro.setId(id);
+            libroRepository.save(libro);
+        } else {
             throw new LibroNoEncontrado(id);
         }
-        libro.setId(id);
-        libroRepository.save(libro);
     }
 }

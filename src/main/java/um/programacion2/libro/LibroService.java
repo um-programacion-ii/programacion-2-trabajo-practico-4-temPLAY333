@@ -9,5 +9,4 @@ public interface LibroService {
     void guardar(Libro libro);
     void actualizar(Long id, Libro libro);
     void eliminar(Long id);
-
 }

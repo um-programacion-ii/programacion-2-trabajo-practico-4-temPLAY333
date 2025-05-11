@@ -1,50 +1,72 @@
 package um.programacion2.usuario;
 
+import um.programacion2.exception.UsuarioNoEncontrado;
+
 import java.util.List;
 
 public class UsuarioServiceImpl implements UsuarioService{
-    @Override
-    public void registrarUsuario(Usuario usuario) {
-        // Implementación del registro de usuario
+    private final UsuarioRepository usuarioRepository;
+
+    public UsuarioServiceImpl(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
     }
 
     @Override
-    public void eliminarUsuario(Usuario usuario) {
-        // Implementación de la eliminación de usuario
+    public Usuario buscarUsuarioPorId(Long id) {
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new UsuarioNoEncontrado(id));
     }
 
     @Override
-    public void actualizarUsuario(Usuario usuario) {
-        // Implementación de la actualización de usuario
-    }
-
-    @Override
-    public Usuario buscarUsuarioPorId(int id) {
-        // Implementación de la búsqueda de usuario por ID
-        return null;
-    }
-
-    @Override
-    public Usuario buscarUsuarioPorNombre(String nombre) {
-        // Implementación de la búsqueda de usuario por nombre
-        return null;
+    public Usuario buscarUsuarioPorEmail(String email) {
+        return usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UsuarioNoEncontrado(email));
     }
 
     @Override
     public List<Usuario> listarUsuariosActivos() {
-        // Implementación del listado de usuarios activos
-        return null;
+        return usuarioRepository.findAll()
+                .stream()
+                .filter(Usuario::getEstado)
+                .toList();
     }
 
     @Override
     public List<Usuario> listarUsuariosInactivos() {
-        // Implementación del listado de usuarios inactivos
-        return null;
+        return usuarioRepository.findAll()
+                .stream()
+                .filter(usuario -> !usuario.getEstado())
+                .toList();
     }
 
     @Override
     public List<Usuario> listarUsuariosPorNombre(String nombre) {
-        // Implementación del listado de usuarios por nombre
-        return null;
+        return usuarioRepository.findAll()
+                .stream()
+                .filter(usuario -> usuario.getNombre().contains(nombre))
+                .toList();
+    }
+
+    @Override
+    public void guardar(Usuario usuario) {
+        usuarioRepository.save(usuario);
+    }
+
+    @Override
+    public void eliminar(Long id) {
+        if (usuarioRepository.existsById(id)) {
+            usuarioRepository.deleteById(id);
+        } else {
+            throw new UsuarioNoEncontrado(id);
+        }
+    }
+
+    @Override
+    public void actualizar(Long id, Usuario usuario) {
+        if (usuarioRepository.existsById(id)) {
+            usuarioRepository.save(usuario);
+        } else {
+            throw new UsuarioNoEncontrado(id);
+        }
     }
 }

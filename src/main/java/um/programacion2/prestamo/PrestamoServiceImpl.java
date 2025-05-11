@@ -1,5 +1,7 @@
 package um.programacion2.prestamo;
 
+import um.programacion2.exception.PrestamoNoEncontrado;
+
 import java.util.List;
 
 public class PrestamoServiceImpl implements PrestamoService {
@@ -10,13 +12,14 @@ public class PrestamoServiceImpl implements PrestamoService {
     }
 
     @Override
-    public Prestamo buscarPrestamoPorId(int id) {
-        return prestamoRepository.buscarPrestamoPorId(id).orElse(null);
+    public Prestamo buscarPrestamoPorId(Long id) {
+        return prestamoRepository.findById(id)
+                .orElseThrow(() -> new PrestamoNoEncontrado(id));
     }
 
     @Override
     public List<Prestamo> listarPrestamos() {
-        return prestamoRepository.listarPrestamos();
+        return prestamoRepository.findAll();
     }
 
     @Override
@@ -28,6 +31,8 @@ public class PrestamoServiceImpl implements PrestamoService {
     public void actualizarPrestamo(Prestamo prestamo) {
         if (prestamoRepository.existsById(prestamo.getId())) {
             prestamoRepository.save(prestamo);
+        } else {
+            throw new PrestamoNoEncontrado(prestamo.getId());
         }
     }
 
@@ -36,6 +41,8 @@ public class PrestamoServiceImpl implements PrestamoService {
         Long prestamoId = prestamo.getId();
         if (prestamoRepository.existsById(prestamoId)) {
             prestamoRepository.deleteById(prestamoId);
+        } else {
+            throw new PrestamoNoEncontrado(prestamoId);
         }
     }
 }

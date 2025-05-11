@@ -3,12 +3,14 @@ package um.programacion2.usuario;
 import java.util.List;
 
 public interface UsuarioService {
-    void registrarUsuario(Usuario usuario);
-    void eliminarUsuario(Usuario usuario);
-    void actualizarUsuario(Usuario usuario);
-    Usuario buscarUsuarioPorId(int id);
-    Usuario buscarUsuarioPorNombre(String nombre);
+    Usuario buscarUsuarioPorId(Long id);
+    Usuario buscarUsuarioPorEmail(String email);
+
     List<Usuario> listarUsuariosActivos();
     List<Usuario> listarUsuariosInactivos();
     List<Usuario> listarUsuariosPorNombre(String nombre);
+
+    void guardar(Usuario usuario);
+    void actualizar(Long id, Usuario usuario);
+    void eliminar(Long id);
 }
