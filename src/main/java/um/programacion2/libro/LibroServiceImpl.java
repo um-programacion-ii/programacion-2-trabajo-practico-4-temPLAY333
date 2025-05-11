@@ -14,9 +14,9 @@ public class LibroServiceImpl implements LibroService {
     }
 
     @Override
-    public Libro buscarPorIsbn(String isbn) {
-        return libroRepository.findByIsbn(isbn)
-                .orElseThrow(() -> new LibroNoEncontrado(isbn));
+    public Libro buscarPorId(Long id) {
+        return libroRepository.findById(id)
+                .orElseThrow(() -> new LibroNoEncontrado(id));
     }
 
     @Override
@@ -26,6 +26,7 @@ public class LibroServiceImpl implements LibroService {
 
     @Override
     public void guardar(Libro libro) {
+        LibroValidador.verifyIsbn(libro.getIsbn());
         libroRepository.save(libro);
     }
 

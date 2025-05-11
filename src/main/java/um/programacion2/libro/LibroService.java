@@ -3,7 +3,7 @@ package um.programacion2.libro;
 import java.util.List;
 
 public interface LibroService {
-    Libro buscarPorIsbn(String isbn);
+    Libro buscarPorId(Long id);
     List<Libro> obtenerTodos();
 
     void guardar(Libro libro);

@@ -1,23 +1,12 @@
 package um.programacion2.libro;
 
+import org.springframework.stereotype.Service;
 import um.programacion2.exception.LibroArgumentoIlegal;
 
-public class LibroFactory {
-
-    public static Libro createLibro(String isbn, String titulo, String autor) {
-        verifyIsbn(isbn);
-        verifyTitulo(titulo);
-        verifyAutor(autor);
-        EstadoLibro estado = EstadoLibro.DISPONIBLE;
-        return new Libro(null, isbn, titulo, autor, estado);
-    }
+@Service
+public class LibroValidador {
 
     public static void verifyIsbn(String ISBN) throws LibroArgumentoIlegal {
-        // Verificar si el ISBN es válido
-        if (ISBN == null || ISBN.trim().isEmpty()) {
-            throw new LibroArgumentoIlegal("No puede ser nulo o vacío");
-        }
-
         String isbnLimpio = getIsbnLimpio(ISBN);
 
         if (!validarDigitoControl(isbnLimpio)) {
@@ -61,20 +50,6 @@ public class LibroFactory {
             int digitoCalculado = (10 - (suma % 10)) % 10;
 
             return digitoControl == digitoCalculado;
-        }
-    }
-
-    public static void verifyTitulo(String titulo) {
-        // Verificar si el título es válido
-        if (titulo == null || titulo.trim().isEmpty()) {
-            throw new LibroArgumentoIlegal("El título no puede ser nulo o vacío");
-        }
-    }
-
-    public static void verifyAutor(String autor) {
-        // Verificar si el autor es válido
-        if (autor == null || autor.trim().isEmpty()) {
-            throw new LibroArgumentoIlegal("El autor no puede ser nulo o vacío");
         }
     }
 }

@@ -10,6 +10,7 @@ En base a lo estipulado en el README.md del proyecto, se ha decidido documentar 
 - Autocompletado: Se utilizó la IA para autocompletar codigo para funciones sencillas y strings repetitivos o similares (como el mensaje de error de las Exceptions).
 
 ### Etapa 3: Controllers
-
+- Autocompletado: Se utilizó la IA para autocompletar codigo para funciones sencillas y strings repetitivos o similares (como el mensaje de error de las Exceptions).
+- Refactorización: Se utilizó la IA para refactorizar el código de los controladores, mejorando la legibilidad y la estructura del mismo. Esto incluye la validacion de datos en la entidad, y el manejo de excepciones HTTP mediante codigos 200, 2201, 404, 500, etc.
 
 ### Etapa 4: Testing y Documentación
