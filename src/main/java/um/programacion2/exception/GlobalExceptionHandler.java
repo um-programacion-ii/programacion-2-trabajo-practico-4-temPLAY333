@@ -17,64 +17,69 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    private ResponseEntity<Object> createErrorResponse(HttpStatus status, String message, List<String> errors) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", status.value());
+        body.put("message", message);
+        if (errors != null && !errors.isEmpty()) {
+            body.put("errors", errors);
+        }
+
+        return new ResponseEntity<>(body, status);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", HttpStatus.BAD_REQUEST.value());
-
-        // Recolectar todos los errores de validación
         List<String> errores = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.toList());
 
-        body.put("errors", errores);
-
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        return createErrorResponse(
+                HttpStatus.BAD_REQUEST,
+                "Error de validación",
+                errores);
     }
 
     @ExceptionHandler(LibroNoEncontrado.class)
     public ResponseEntity<Object> handleLibroNoEncontrado(LibroNoEncontrado ex, WebRequest request) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("message", ex.getMessage());
-        body.put("status", HttpStatus.NOT_FOUND.value());
-
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        return createErrorResponse(
+                HttpStatus.NOT_FOUND,
+                ex.getMessage(),
+                null);
     }
 
     @ExceptionHandler(LibroArgumentoIlegal.class)
     public ResponseEntity<Object> handleLibroArgumentoIlegal(LibroArgumentoIlegal ex, WebRequest request) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("message", ex.getMessage());
-        body.put("status", HttpStatus.BAD_REQUEST.value());
-
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        return createErrorResponse(
+                HttpStatus.BAD_REQUEST,
+                ex.getMessage(),
+                null);
     }
-
 
     @ExceptionHandler(UsuarioNoEncontrado.class)
     public ResponseEntity<Object> handleUsuarioNoEncontrado(UsuarioNoEncontrado ex, WebRequest request) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("message", ex.getMessage());
-        body.put("status", HttpStatus.NOT_FOUND.value());
-
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        return createErrorResponse(
+                HttpStatus.NOT_FOUND,
+                ex.getMessage(),
+                null);
     }
 
     @ExceptionHandler(PrestamoNoEncontrado.class)
     public ResponseEntity<Object> handlePrestamoNoEncontrado(PrestamoNoEncontrado ex, WebRequest request) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("message", ex.getMessage());
-        body.put("status", HttpStatus.NOT_FOUND.value());
-
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        return createErrorResponse(
+                HttpStatus.NOT_FOUND,
+                ex.getMessage(),
+                null);
     }
 
-
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleGlobalException(Exception ex, WebRequest request) {
+        return createErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Error interno del servidor",
+                null);
+    }
 }
