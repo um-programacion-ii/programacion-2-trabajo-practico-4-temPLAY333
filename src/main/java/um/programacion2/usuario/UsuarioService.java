@@ -3,8 +3,8 @@ package um.programacion2.usuario;
 import java.util.List;
 
 public interface UsuarioService {
-    Usuario buscarUsuarioPorId(Long id);
-    Usuario buscarUsuarioPorEmail(String email);
+    Usuario buscarPorId(Long id);
+    Usuario buscarPorEmail(String email);
 
     List<Usuario> listarUsuariosActivos();
     List<Usuario> listarUsuariosInactivos();

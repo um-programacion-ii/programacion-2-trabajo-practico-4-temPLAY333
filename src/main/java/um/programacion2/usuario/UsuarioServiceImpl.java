@@ -12,13 +12,13 @@ public class UsuarioServiceImpl implements UsuarioService{
     }
 
     @Override
-    public Usuario buscarUsuarioPorId(Long id) {
+    public Usuario buscarPorId(Long id) {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new UsuarioNoEncontrado(id));
     }
 
     @Override
-    public Usuario buscarUsuarioPorEmail(String email) {
+    public Usuario buscarPorEmail(String email) {
         return usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new UsuarioNoEncontrado(email));
     }

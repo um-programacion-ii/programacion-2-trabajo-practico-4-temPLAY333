@@ -56,4 +56,25 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(UsuarioNoEncontrado.class)
+    public ResponseEntity<Object> handleUsuarioNoEncontrado(UsuarioNoEncontrado ex, WebRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", ex.getMessage());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PrestamoNoEncontrado.class)
+    public ResponseEntity<Object> handlePrestamoNoEncontrado(PrestamoNoEncontrado ex, WebRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", ex.getMessage());
+        body.put("status", HttpStatus.NOT_FOUND.value());
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+
 }
