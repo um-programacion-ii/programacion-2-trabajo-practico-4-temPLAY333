@@ -2,6 +2,7 @@ package um.programacion2.libro;
 
 import org.springframework.stereotype.Service;
 import um.programacion2.exception.LibroNoEncontrado;
+import um.programacion2.validacion.LibroValidador;
 
 import java.util.List;
 
@@ -14,18 +15,19 @@ public class LibroServiceImpl implements LibroService {
     }
 
     @Override
-    public Libro buscarPorIsbn(String isbn) {
-        return libroRepository.findByIsbn(isbn)
-                .orElseThrow(() -> new LibroNoEncontrado(isbn));
+    public Libro buscarPorId(Long id) {
+        return libroRepository.findById(id)
+                .orElseThrow(() -> new LibroNoEncontrado(id));
     }
 
     @Override
-    public List<Libro> obtenerTodos() {
+    public List<Libro> listarLibros() {
         return libroRepository.findAll();
     }
 
     @Override
     public void guardar(Libro libro) {
+        LibroValidador.verifyIsbn(libro.getIsbn());
         libroRepository.save(libro);
     }
 
