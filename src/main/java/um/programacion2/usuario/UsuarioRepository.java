@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface UsuarioRepository {
     void save(Usuario usuario);
     void deleteById(Long id);
+    void limpiarTodo();
     boolean existsById(Long id);
 
     Optional<Usuario> findById(Long id);
@@ -18,6 +19,4 @@ public interface UsuarioRepository {
 
     Map<Long, Usuario> getUsuarios();
     void setUsuarios (Map<Long, Usuario> libros);
-
-    void limpiarTodo();
 }

@@ -8,8 +8,6 @@ import um.programacion2.usuario.Usuario;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.mock;
-
 public class TestDataFactory {
     public static List<Libro> createLibros() {
         List<Libro> libros = new ArrayList<>();
@@ -27,4 +25,14 @@ public class TestDataFactory {
         return usuarios;
     }
 
+    public static List<Prestamo> createPrestamos() {
+        List<Libro> libros = createLibros();
+        List<Usuario> usuarios = createUsuarios();
+
+        List<Prestamo> prestamos = new ArrayList<>();
+        prestamos.add(new Prestamo(1L, libros.get(0), usuarios.get(0), "2023-10-20", "2023-10-27"));
+        prestamos.add(new Prestamo(2L, libros.get(1), usuarios.get(1), "2023-10-07", "2023-10-14"));
+        prestamos.add(new Prestamo(3L, libros.get(2), usuarios.get(2), "2023-10-10", "2023-10-17"));
+        return prestamos;
+    }
 }
