@@ -1,3 +1,4 @@
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/Vg2EF-QZ)
 # 🚀 Trabajo Práctico: Sistema de Gestión de Biblioteca con Spring Framework
 
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.5-green)
@@ -118,8 +119,8 @@ Desarrollar un sistema de gestión de biblioteca utilizando Spring Framework, im
 > 💡 **Nota**: Esta estimación considera la experiencia adquirida en trabajos anteriores y la complejidad de implementar una arquitectura en capas con Spring Framework. El tiempo se ha ajustado considerando que no se requiere implementación de persistencia real.
 
 ## 👨‍🎓 Información del Alumno
-- **Nombre y Apellido**: [Nombre y Apellido del Alumno]
-- **Legajo**: [Número de Legajo]
+- **Nombre y Apellido**: Tomás Bourguet
+- **Legajo**: 61235
 
 ## 📋 Requisitos Previos
 
@@ -534,3 +535,346 @@ El uso de Inteligencia Artificial (IA) en este trabajo práctico debe seguir las
 ## 📝 Licencia
 
 Este trabajo es parte del curso de Programación II de Ingeniería en Informática. Uso educativo únicamente.
+
+## 📜 Requisitos para la entrega
+### Instrucciones de instalación:
+Para instalar y ejecutar este proyecto, sigue estos pasos:
+1. Clonar el repositorio 
+   'git clone https://github.com/um-programacion-ii/programacion-2-trabajo-practico-4-temPLAY333'
+   'cd TP-4'
+2. Asegurarse de tener instalado 
+   - Java 21 o superior 
+   - Maven 3.9.0 o superior
+3. Compilar el proyecto
+     'mvn clean install'
+4. Ejecutar la aplicación
+     'mvn spring-boot:run'
+
+Acceder a la API La aplicación estará disponible en http://localhost:8080
+
+### Requisitos del sistema:
+- Java: versión 21 o superior
+- Maven: versión 3.9.0 o superior
+- Sistema Operativo: Compatible con Windows, macOS y Linux
+- Memoria RAM: Mínimo 2GB (recomendado 4GB)
+ -Espacio en disco: Mínimo 500MB disponibles
+- Conexión a Internet: Para descargar dependencias y actualizaciones
+- IDE recomendado: IntelliJ IDEA, Eclipse o Spring Tool Suite
+
+### Ejemplos de uso:
+- Obtener todos los libros
+    'curl -X GET http://localhost:8080/api/libros'
+- Buscar libro por ID
+    'curl -X GET http://localhost:8080/api/libros/1'
+- Crear nuevo libro
+    'curl -X POST -H "Content-Type: application/json" -d '{"isbn": "1234567890", "titulo": "Nuevo Libro", "autor": "Autor", "estado": "DISPONIBLE"}'
+- Actualizar libro
+    'curl -X PUT -H "Content-Type: application/json" -d '{"isbn": "1234567890", "titulo": "Libro Actualizado", "autor": "Autor Actualizado", "estado": "PRESTADO"}'
+- Eliminar libro
+    'curl -X DELETE http://localhost:8080/api/libros/1'
+
+### Documentación de Endpoints
+
+#### **Libros**
+
+- **Obtener todos los libros**
+  - **Método:** `GET`
+  - **URL:** `/api/libros`
+  - **Descripción:** Devuelve una lista de todos los libros disponibles.
+  - **Respuesta exitosa (200):**
+    ```json
+    [
+      {
+        "id": 1,
+        "isbn": "1234567890",
+        "titulo": "Libro Ejemplo",
+        "autor": "Autor Ejemplo",
+        "estado": "DISPONIBLE"
+      }
+    ]
+    ```
+
+- **Buscar libro por ID**
+  - **Método:** `GET`
+  - **URL:** `/api/libros/{id}`
+  - **Descripción:** Devuelve los detalles de un libro específico por su ID.
+  - **Respuesta exitosa (200):**
+    ```json
+    {
+      "id": 1,
+      "isbn": "1234567890",
+      "titulo": "Libro Ejemplo",
+      "autor": "Autor Ejemplo",
+      "estado": "DISPONIBLE"
+    }
+    ```
+  - **Error (404):**
+    ```json
+    {
+      "error": "No se encontro un libro con el ID de: {id}"
+    }
+    ```
+
+- **Crear un nuevo libro**
+  - **Método:** `POST`
+  - **URL:** `/api/libros`
+  - **Descripción:** Crea un nuevo libro en el sistema.
+  - **Cuerpo de la solicitud:**
+    ```json
+    {
+      "isbn": "1234567890",
+      "titulo": "Nuevo Libro",
+      "autor": "Autor",
+      "estado": "DISPONIBLE"
+    }
+    ```
+  - **Respuesta exitosa (201):**
+    ```json
+    {
+      "id": 1,
+      "isbn": "1234567890",
+      "titulo": "Nuevo Libro",
+      "autor": "Autor",
+      "estado": "DISPONIBLE"
+    }
+    ```
+
+- **Actualizar un libro**
+  - **Método:** `PUT`
+  - **URL:** `/api/libros/{id}`
+  - **Descripción:** Actualiza los detalles de un libro existente.
+  - **Cuerpo de la solicitud:**
+    ```json
+    {
+      "isbn": "1234567890",
+      "titulo": "Libro Actualizado",
+      "autor": "Autor Actualizado",
+      "estado": "PRESTADO"
+    }
+    ```
+  - **Respuesta exitosa (204):** Sin contenido.
+  - **Error (404):**
+    ```json
+    {
+      "error": "No se encontro un libro con el ID de: {id}"
+    }
+    ```
+
+- **Eliminar un libro**
+  - **Método:** `DELETE`
+  - **URL:** `/api/libros/{id}`
+  - **Descripción:** Elimina un libro del sistema.
+  - **Respuesta exitosa (204):** Sin contenido.
+  - **Error (404):**
+    ```json
+    {
+      "error": "No se encontro un libro con el ID de: {id}"
+    }
+    ```
+#### **Préstamos**
+
+- **Obtener todos los préstamos**
+  - **Método:** `GET`
+  - **URL:** `/api/prestamos`
+  - **Descripción:** Devuelve una lista de todos los préstamos registrados.
+  - **Respuesta exitosa (200):**
+    ```json
+    [
+      {
+        "id": 1,
+        "libro": {
+          "id": 1,
+          "titulo": "Libro Ejemplo"
+        },
+        "usuario": {
+          "id": 1,
+          "nombre": "Usuario Ejemplo"
+        },
+        "fechaPrestamo": "2025-05-01",
+        "fechaDevolucion": "2025-05-15"
+      }
+    ]
+    ```
+
+- **Buscar préstamo por ID**
+  - **Método:** `GET`
+  - **URL:** `/api/prestamos/{id}`
+  - **Descripción:** Devuelve los detalles de un préstamo específico por su ID.
+  - **Respuesta exitosa (200):**
+    ```json
+    {
+      "id": 1,
+      "libro": {
+        "id": 1,
+        "titulo": "Libro Ejemplo"
+      },
+      "usuario": {
+        "id": 1,
+        "nombre": "Usuario Ejemplo"
+      },
+      "fechaPrestamo": "2025-05-01",
+      "fechaDevolucion": "2025-05-15"
+    }
+    ```
+  - **Error (404):**
+    ```json
+    {
+      "error": "No se encontro un préstamo con el ID de: {id}"
+    }
+    ```
+
+- **Crear un nuevo préstamo**
+  - **Método:** `POST`
+  - **URL:** `/api/prestamos`
+  - **Descripción:** Registra un nuevo préstamo en el sistema.
+  - **Cuerpo de la solicitud:**
+    ```json
+    {
+      "libroId": 1,
+      "usuarioId": 1,
+      "fechaPrestamo": "2025-05-01",
+      "fechaDevolucion": "2025-05-15"
+    }
+    ```
+  - **Respuesta exitosa (201):**
+    ```json
+    {
+      "id": 1,
+      "libro": {
+        "id": 1,
+        "titulo": "Libro Ejemplo"
+      },
+      "usuario": {
+        "id": 1,
+        "nombre": "Usuario Ejemplo"
+      },
+      "fechaPrestamo": "2025-05-01",
+      "fechaDevolucion": "2025-05-15"
+    }
+    ```
+
+- **Actualizar un préstamo**
+  - **Método:** `PUT`
+  - **URL:** `/api/prestamos/{id}`
+  - **Descripción:** Actualiza los detalles de un préstamo existente.
+  - **Cuerpo de la solicitud:**
+    ```json
+    {
+      "libroId": 1,
+      "usuarioId": 1,
+      "fechaPrestamo": "2025-05-01",
+      "fechaDevolucion": "2025-05-20"
+    }
+    ```
+  - **Respuesta exitosa (204):** Sin contenido.
+  - **Error (404):**
+    ```json
+    {
+      "error": "No se encontro un préstamo con el ID de: {id}"
+    }
+    ```
+
+- **Eliminar un préstamo**
+  - **Método:** `DELETE`
+  - **URL:** `/api/prestamos/{id}`
+  - **Descripción:** Elimina un préstamo del sistema.
+  - **Respuesta exitosa (204):** Sin contenido.
+  - **Error (404):**
+    ```json
+    {
+      "error": "No se encontro un préstamo con el ID de: {id}"
+    }
+    ```
+    
+#### **Usuarios**
+
+- **Obtener todos los usuarios**
+  - **Método:** `GET`
+  - **URL:** `/api/usuarios`
+  - **Descripción:** Devuelve una lista de todos los usuarios registrados.
+  - **Respuesta exitosa (200):**
+    ```json
+    [
+      {
+        "id": 1,
+        "nombre": "Usuario Ejemplo",
+        "email": "usuario@example.com",
+        "estado": "ACTIVO"
+      }
+    ]
+    ```
+
+- **Buscar usuario por ID**
+  - **Método:** `GET`
+  - **URL:** `/api/usuarios/{id}`
+  - **Descripción:** Devuelve los detalles de un usuario específico por su ID.
+  - **Respuesta exitosa (200):**
+    ```json
+    {
+      "id": 1,
+      "nombre": "Usuario Ejemplo",
+      "email": "usuario@example.com",
+      "estado": "ACTIVO"
+    }
+    ```
+  - **Error (404):**
+    ```json
+    {
+      "error": "No se encontro un usuario con el ID de: {id}"
+    }
+    ```
+
+- **Crear un nuevo usuario**
+  - **Método:** `POST`
+  - **URL:** `/api/usuarios`
+  - **Descripción:** Crea un nuevo usuario en el sistema.
+  - **Cuerpo de la solicitud:**
+    ```json
+    {
+      "nombre": "Nuevo Usuario",
+      "email": "nuevo.usuario@example.com",
+      "estado": "ACTIVO"
+    }
+    ```
+  - **Respuesta exitosa (201):**
+    ```json
+    {
+      "id": 1,
+      "nombre": "Nuevo Usuario",
+      "email": "nuevo.usuario@example.com",
+      "estado": "ACTIVO"
+    }
+    ```
+
+- **Actualizar un usuario**
+  - **Método:** `PUT`
+  - **URL:** `/api/usuarios/{id}`
+  - **Descripción:** Actualiza los detalles de un usuario existente.
+  - **Cuerpo de la solicitud:**
+    ```json
+    {
+      "nombre": "Usuario Actualizado",
+      "email": "usuario.actualizado@example.com",
+      "estado": "INACTIVO"
+    }
+    ```
+  - **Respuesta exitosa (204):** Sin contenido.
+  - **Error (404):**
+    ```json
+    {
+      "error": "No se encontro un usuario con el ID de: {id}"
+    }
+    ```
+
+- **Eliminar un usuario**
+  - **Método:** `DELETE`
+  - **URL:** `/api/usuarios/{id}`
+  - **Descripción:** Elimina un usuario del sistema.
+  - **Respuesta exitosa (204):** Sin contenido.
+  - **Error (404):**
+    ```json
+    {
+      "error": "No se encontro un usuario con el ID de: {id}"
+    }
+    ```
+    
