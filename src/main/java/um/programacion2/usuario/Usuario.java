@@ -23,7 +23,7 @@ public class Usuario {
     private String nombre;
 
     @NotBlank(message = "El apellido no puede estar vacío")
-    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z]{2,6}$", message = "Email no válido")
+    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$", message = "Email no válido")
     private String email;
 
     @NotNull

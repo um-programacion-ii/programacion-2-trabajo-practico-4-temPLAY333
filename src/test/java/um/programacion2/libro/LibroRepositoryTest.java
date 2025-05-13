@@ -1,5 +1,6 @@
 package um.programacion2.libro;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import um.programacion2.util.TestDataFactory;
 
 import org.junit.jupiter.api.BeforeEach;
