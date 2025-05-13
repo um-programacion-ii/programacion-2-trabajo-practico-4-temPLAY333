@@ -5,8 +5,10 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.stereotype.Component;
 
 @Data
+@Component
 @NoArgsConstructor
 @AllArgsConstructor
 public class Libro {

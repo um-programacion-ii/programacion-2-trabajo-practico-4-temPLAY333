@@ -1,7 +1,10 @@
 package um.programacion2.usuario;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.*;
 
+@Repository
 public class UsuarioRepositoryImpl implements UsuarioRepository {
     private final Map<Long, Usuario> usuarios = new HashMap<>();
     private Long nextId = 1L;

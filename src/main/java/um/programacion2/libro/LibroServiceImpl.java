@@ -1,5 +1,6 @@
 package um.programacion2.libro;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import um.programacion2.exception.LibroNoEncontrado;
 import um.programacion2.validacion.LibroValidador;
@@ -9,9 +10,12 @@ import java.util.List;
 @Service
 public class LibroServiceImpl implements LibroService {
     private final LibroRepository libroRepository;
+    private final LibroValidador libroValidador;
 
+    @Autowired
     public LibroServiceImpl(LibroRepository libroRepository) {
         this.libroRepository = libroRepository;
+        this.libroValidador = new LibroValidador();
     }
 
     @Override
@@ -27,7 +31,7 @@ public class LibroServiceImpl implements LibroService {
 
     @Override
     public void guardar(Libro libro) {
-        LibroValidador.verifyIsbn(libro.getIsbn());
+        libroValidador.verifyIsbn(libro.getIsbn());
         libroRepository.save(libro);
     }
 

@@ -1,10 +1,11 @@
 package um.programacion2.prestamo;
 
+import org.springframework.stereotype.Repository;
 import um.programacion2.libro.Libro;
 
 import java.util.*;
 
-
+@Repository
 public class PrestamoRepositoryImpl implements PrestamoRepository {
     private final Map<Long, Prestamo> prestamos = new HashMap<>();
     private Long nextId = 1L;
