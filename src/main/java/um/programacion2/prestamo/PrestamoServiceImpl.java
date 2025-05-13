@@ -1,9 +1,11 @@
 package um.programacion2.prestamo;
 
+import org.springframework.stereotype.Service;
 import um.programacion2.exception.PrestamoNoEncontrado;
 
 import java.util.List;
 
+@Service
 public class PrestamoServiceImpl implements PrestamoService {
     private final PrestamoRepository prestamoRepository;
 

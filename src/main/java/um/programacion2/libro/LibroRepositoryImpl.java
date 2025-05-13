@@ -6,7 +6,7 @@ import java.util.*;
 
 @Repository
 public class LibroRepositoryImpl implements LibroRepository {
-    private final Map<Long, Libro> libros = new HashMap<>();
+    private Map<Long, Libro> libros = new HashMap<>();
     private Long nextId = 1L;
 
     @Override
@@ -40,7 +40,22 @@ public class LibroRepositoryImpl implements LibroRepository {
     }
 
     @Override
+    public void limpiarTodo() {
+        libros.clear();
+    }
+
+    @Override
     public boolean existsById(Long id) {
         return libros.containsKey(id);
+    }
+
+    @Override
+    public Map<Long, Libro> getLibros() {
+        return libros;
+    }
+
+    @Override
+    public void setLibros (Map<Long, Libro> libros) {
+        this.libros = libros;
     }
 }

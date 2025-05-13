@@ -7,11 +7,13 @@ import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import org.springframework.stereotype.Component;
 import um.programacion2.libro.Libro;
 import um.programacion2.usuario.Usuario;
 import um.programacion2.validacion.FechaDevolucionValida;
 
 @Data
+@Component
 @NoArgsConstructor
 @AllArgsConstructor
 @FechaDevolucionValida

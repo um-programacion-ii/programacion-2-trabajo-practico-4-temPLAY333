@@ -1,9 +1,12 @@
 package um.programacion2.usuario;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.*;
 
+@Repository
 public class UsuarioRepositoryImpl implements UsuarioRepository {
-    private final Map<Long, Usuario> usuarios = new HashMap<>();
+    private Map<Long, Usuario> usuarios = new HashMap<>();
     private Long nextId = 1L;
 
     @Override
@@ -37,7 +40,22 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
     }
 
     @Override
+    public void limpiarTodo() {
+        usuarios.clear();
+    }
+
+    @Override
     public boolean existsById(Long id) {
         return usuarios.containsKey(id);
+    }
+
+    @Override
+    public Map<Long, Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    @Override
+    public void setUsuarios(Map<Long, Usuario> usuarios) {
+        this.usuarios = usuarios;
     }
 }

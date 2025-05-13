@@ -1,9 +1,11 @@
 package um.programacion2.usuario;
 
+import org.springframework.stereotype.Service;
 import um.programacion2.exception.UsuarioNoEncontrado;
 
 import java.util.List;
 
+@Service
 public class UsuarioServiceImpl implements UsuarioService{
     private final UsuarioRepository usuarioRepository;
 

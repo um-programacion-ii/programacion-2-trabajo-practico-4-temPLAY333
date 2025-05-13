@@ -6,7 +6,7 @@ import um.programacion2.exception.LibroArgumentoIlegal;
 @Service
 public class LibroValidador {
 
-    public static void verifyIsbn(String ISBN) throws LibroArgumentoIlegal {
+    public void verifyIsbn(String ISBN) throws LibroArgumentoIlegal {
         String isbnLimpio = getIsbnLimpio(ISBN);
 
         if (!validarDigitoControl(isbnLimpio)) {
@@ -14,7 +14,7 @@ public class LibroValidador {
         }
     }
 
-    public static String getIsbnLimpio(String ISBN) throws LibroArgumentoIlegal {
+    public String getIsbnLimpio(String ISBN) throws LibroArgumentoIlegal {
         String isbnLimpio = ISBN.replaceAll("[-\\s]", "");
 
         if (isbnLimpio.length() != 10 && isbnLimpio.length() != 13) {
@@ -28,7 +28,7 @@ public class LibroValidador {
         return isbnLimpio;
     }
 
-    public static boolean validarDigitoControl(String isbnLimpio) {
+    public boolean validarDigitoControl(String isbnLimpio) {
         int suma = 0;
         if (isbnLimpio.length() == 10) {
             // Validación para ISBN-10

@@ -1,12 +1,13 @@
 package um.programacion2.prestamo;
 
+import org.springframework.stereotype.Repository;
 import um.programacion2.libro.Libro;
 
 import java.util.*;
 
-
+@Repository
 public class PrestamoRepositoryImpl implements PrestamoRepository {
-    private final Map<Long, Prestamo> prestamos = new HashMap<>();
+    private Map<Long, Prestamo> prestamos = new HashMap<>();
     private Long nextId = 1L;
 
     @Override
@@ -20,6 +21,11 @@ public class PrestamoRepositoryImpl implements PrestamoRepository {
     @Override
     public void deleteById(Long id) {
         prestamos.remove(id);
+    }
+
+    @Override
+    public void limpiarTodo() {
+        prestamos.clear();
     }
 
     @Override
@@ -42,5 +48,15 @@ public class PrestamoRepositoryImpl implements PrestamoRepository {
     @Override
     public List<Prestamo> findAll() {
         return new ArrayList<>(prestamos.values());
+    }
+
+    @Override
+    public Map<Long, Prestamo> getPrestamos() {
+        return prestamos;
+    }
+
+    @Override
+    public void setPrestamos(Map<Long, Prestamo> prestamos) {
+        this.prestamos = prestamos;
     }
 }
